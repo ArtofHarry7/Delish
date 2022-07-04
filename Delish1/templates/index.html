@@ -1,0 +1,21 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Home{% endblock title %}
+
+{% block body %}
+<section class="home" id="home">
+
+    <div class="content">
+        <h3>Delish</h3>
+        <h3>food made with love</h3>
+        <p>The pizza itself looks so yummy, crispy and so cheesy. There is no better feeling in the world than a warm pizza box on your lap. My love for Pizza is very high. I am always hungry for pizza, be it any time of the day. Cheese is the secret ingredient of any food it makes any food taste yummy.</p>
+        <a href="/menu" class="btn__">order now</a>
+    </div>
+
+    <div class="image">
+        <img src={% static "images/home-img.png" %} alt="">
+    </div>
+
+</section>
+{% endblock body %}
