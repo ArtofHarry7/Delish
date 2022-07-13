@@ -1,23 +1,10 @@
 from django.db import models
 from datetime import date
-
+from django.contrib.auth.models import User
 
 # Create your models here.
 
-# class contactus(models.Model):
-#     phone = models.CharField(max_length=50, default="")
-#     age = models.IntegerField(default=20)
-#     cust_name = models.CharField(max_length=50, default="")
-#     email = models.CharField(max_length=50, default="")
-#     query = models.TextField(default="")
-#     date = models.DateField(default=date(2007, 7, 27))
-
-#     def __str__(self):
-#         return self.cust_name
-
-
 class MENU(models.Model):
-    menu_id = models.AutoField
     name = models.CharField(max_length=50)
     category = models.CharField(max_length=50, default='')
     price = models.IntegerField()
@@ -28,31 +15,33 @@ class MENU(models.Model):
         st = str(self.name)
         return st
 
-# class orders(models.Model):
-#     order_id = models.AutoField(primary_key=True)
-#     cust_name = models.CharField(max_length=50, default='')
-#     phone = models.CharField(max_length=20, default='')
-#     email = models.CharField(max_length=50, default='')
-#     address = models.CharField(max_length=50, default='')
-#     city = models.CharField(max_length=50, default='')
-#     state = models.CharField(max_length=50, default='')
-#     zip_code = models.CharField(max_length=50, default='')
-#     order_str = models.CharField(max_length=5000, default='')
-#     date = models.DateField(default=date(2007, 7, 27))
+class ORDER(models.Model):
+    user_name = models.CharField(max_length=50, default='')
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    menu = models.ManyToManyField(MENU, through='ORDER_MENU')
+    payment_mode = models.CharField(max_length=50, default='COD')
+    price = models.BigIntegerField(default=0)
+    phone = models.CharField(max_length=20, default='')
+    address1 = models.CharField(max_length=200, default='')
+    address2 = models.CharField(max_length=200, default='')
+    city = models.CharField(max_length=50, default='')
+    state = models.CharField(max_length=50, default='')
+    zip_code = models.CharField(max_length=50, default='')
+    date = models.DateField(default=date(2007, 7, 27))
 
-# class order_menu(models.Model):
-#     # order_id = models.ForeignKey()
-#     order_id = models.ForeignKey(orders, on_delete=models.CASCADE)
-#     menu_id = models.ForeignKey(MENU, on_delete=models.CASCADE)
-#     name = models.CharField(max_length=50)
-#     quantity = models.IntegerField(default=0)
+    def __str__(self):
+        st = "Order No." + str(self.id) + " by  " + str(self.user)
+        return st
 
-# class customer(models.Model):
-#     name = models.CharField(max_length=50, primary_key=True)
-#     email = models.CharField(max_length=50, unique='True', null=True)
-#     password = models.CharField(max_length=50, null=True)
-#     repassword = models.CharField(max_length=50, default='', null=True)
+class ORDER_MENU(models.Model):
+    class Meta:
+        unique_together = (('order', 'menu_item'),)
 
-#     def __str__(self):
-#         return self.name
+    order = models.ForeignKey(ORDER, on_delete=models.CASCADE)
+    menu_item = models.ForeignKey(MENU, on_delete=models.CASCADE)
+    name = models.CharField(max_length=50, default='notGiven')
+    quantity = models.IntegerField(default=0)
 
+    def __str__(self):
+        st = "Order No." + str(self.order.id) + " : " + str(self.quantity) + " " + str(self.menu_item) + " by " + str(self.order.user) 
+        return st

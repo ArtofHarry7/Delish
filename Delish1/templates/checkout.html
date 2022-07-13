@@ -3,50 +3,102 @@
 
 {% block title %}Your Cart{% endblock title %}
 
+{% block style %}
+<style>
+    .container{
+        max-width: 600px;
+    }
+</style>
+{% endblock style %}
+
 {% block body %}
 <div class="container">
     <div class="col my-4">
         <h2>Book your Order</h2>
         <div class="my-4">
-            <ul class="list-group" id="items">
-
-            </ul>
+            <ul class="list-group" id="items"></ul>
         </div>
     </div>
     <div class="col my-4">
         <h2>Enter Your Details</h2>
-        <form method="POST", action="/checkout/{{cust_id}}">
+        <form class="form-control" method="POST" action="">
         {% csrf_token %}
+            <input type="hidden" name="priceJason" id="priceJason">
             <input type="hidden" name="itemsJason" id="itemsJason"></input>
             <div class="form-row" name="itemsJason" id="itemsJason">
-                <div class="form-group col-md-4">
-                    <label for="inputname">Name</label>
-                    <input type="text" class="form-control" id="name" name="name" placeholder="Name">
+                <div class="form-group col-md-6">
+                    <label for="name">Name</label>
+                    <input type="text" class="form-control" id="name" placeholder="name" name="name" required>
                 </div>
-                <div class="form-group col-md-4">
-                    <label for="inputPhone">Phone Number</label>
-                    <input type="tel" class="form-control" id="phone" name="phone" placeholder="9876543210">
+                <div class="form-group col-md-6">
+                    <label for="phone">Phone Number</label>
+                    <input type="text" class="form-control" id="phone" placeholder="1234567890" name="phone" required>
                 </div>
             </div>
             <div class="form-group">
-                <label for="inputAddress">Address</label>
-                <input type="text" class="form-control" id="address" name="address" placeholder="1234 Main St">
+                <label for="address1">Address 1</label>
+                <input type="text" class="form-control" id="address1" placeholder="1234 Main St" name="address1" required>
             </div>
-            <div class="form-row">
-                <div class="form-group col-md-4">
-                    <label for="inputCity">City</label>
-                    <input type="text" class="form-control" id="city" name="city">
-                </div>
-                <div class="form-group col-md-4">
-                    <label for="inputState">State</label>
-                    <input type="name" class="form-control" id="state" name="state">
-                </div>
-                <div class="form-group col-md-2">
-                    <label for="inputZip">Zip</label>
-                    <input type="text" class="form-control" id="zip_code" name="zip_code">
-                </div>
+            <div class="form-group">
+                <label for="address2">Address 2</label>
+                <input type="text" class="form-control" id="address2" placeholder="Apartment, studio, or floor" name="address2">
             </div>
-            <button type="submit" class="btn btn-primary my-3">Place order</button>
+                <div class="form-row">
+                    <div class="form-group col-md-6">
+                        <label for="city">City</label>
+                        <input type="text" class="form-control" id="city" name="city" required>
+                    </div>
+                    <div class="form-group col-md-4">
+                        <label for="state">State</label>
+                        <select id="state" class="form-control" name="state" required>
+                            <option value="">None</option>
+                            <option value="Andhra Pradesh">Andhra Pradesh</option>
+                            <option value="Arunachal Pradesh">Arunachal Pradesh</option>
+                            <option value="Assam">Assam</option>
+                            <option value="Bihar">Bihar</option>
+                            <option value="Chhattisgarh">Chhattisgarh</option>
+                            <option value="Goa">Goa</option>
+                            <option value="Gujarat">Gujarat</option>
+                            <option value="Haryana">Haryana</option>
+                            <option value="Himachal Pradesh">Himachal Pradesh</option>
+                            <option value="Jammu and Kashmir">Jammu and Kashmir</option>
+                            <option value="Jharkhand">Jharkhand</option>
+                            <option value="Karnataka">Karnataka</option>
+                            <option value="Kerala">Kerala</option>
+                            <option value="Madhya Pradesh">Madhya Pradesh</option>
+                            <option value="Maharashtra">Maharashtra</option>
+                            <option value="Manipur">Manipur</option>
+                            <option value="Meghalaya">Meghalaya</option>
+                            <option value="Mizoram">Mizoram</option>
+                            <option value="Nagaland">Nagaland</option>
+                            <option value="Odisha">Odisha</option>
+                            <option value="Punjab">Punjab</option>
+                            <option value="Rajasthan">Rajasthan</option>
+                            <option value="Sikkim">Sikkim</option>
+                            <option value="Tamil Nadu">Tamil Nadu</option>
+                            <option value="Telangana">Telangana</option>
+                            <option value="Tripura">Tripura</option>
+                            <option value="Uttar Pradesh">Uttar Pradesh</option>
+                            <option value="Uttarakhand">Uttarakhand</option>
+                            <option value="West Bengal">West Bengal</option>
+                        </select>
+                    </div>
+                    <div class="form-group col-md-2">
+                        <label for="zip">Zip</label>
+                        <input type="text" class="form-control" id="zip" name="zip" required>
+                    </div>
+                </div>                
+            </div>
+            <div class="form-group">
+                <h2 class="col">Mode of Payment</h2>
+                <div class="form-group col-md-4">
+                    <select id="inputState" class="form-control" name="mode" required>
+                        <option value="">None</option>
+                        <option>Cash On Delivery</option>
+                    </select>
+                </div>             
+            </div>
+            <button type="submit" class="mx-4 btn btn-primary my-3">Place order</button>
         </form>
     </div>
 </div>
@@ -59,23 +111,30 @@
     }
     else {
         cart = JSON.parse(localStorage.getItem('cart'));
-        // document.getElementById('cart').innerHTML = Object.keys(cart).length;
     }
-    console.log(cart);
     if ($.isEmptyObject(cart)){
         mystr = `<p>your cart is empty, Hurry Up! Go select some food to order</p>`
         $('#items').append(mystr);
     }
     else {
+        let price = 0
         for (item in cart) {
+            $('#price')
             let name = cart[item][1];
             let qty = cart[item][0];
+            price += qty*cart[item][2];
             mystr = `<li class="list-group-item d-flex justify-content-between align-items-center">
-                    ${name}
-                    <span class="badge badge-primary badge-pill">${qty}</span>
-                </li>`
+                        ${name}
+                        <span class="badge badge-primary badge-pill">${qty} x ${cart[item][2]} = ${qty*cart[item][2]}</span>
+                    </li>`
             $('#items').append(mystr);
         }
+        mystr = `<li class="list-group-item d-flex justify-content-between align-items-center">
+                    Total Price : 
+                    <span class="badge badge-primary badge-pill">${price}</span>
+                </li>`
+        $('#items').append(mystr);
+        $('#priceJason').val(JSON.stringify(price));
     }
 
     $('#itemsJason').val(JSON.stringify(cart));

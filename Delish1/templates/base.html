@@ -16,7 +16,7 @@
 
 
     <!-- custom css file link  -->
-    <link rel="stylesheet" href={% static "style2.css" %}>
+    <link rel="stylesheet" href={% static "style.css" %}>
 
     <!-- Custom styles for this template -->
 
@@ -27,11 +27,9 @@
     <title>{% block title %}{% endblock title %} Delish</title>
   </head>
 
-<body onclick="changeColor()">
-
+<header>
 
   <nav class="navbar navbar-expand-lg navbar-dark bg-dark" id="nav">
-    <!-- <a class="navbar-brand" href="#">Navbar</a> -->
     <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
       <span class="navbar-toggler-icon"></span>
     </button>
@@ -57,14 +55,9 @@
     </div>
   </nav>
 
-  <!-- {% if messages %}
-  {% for message in messages %}
-  <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
-    <strong> {{ message }} </strong>
-    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-  </div>
-  {% endfor %}
-  {% endif %} -->
+</header>
+
+<body onclick="changeColor()">
 
   {% if messages %}
   {% for message in messages %}
@@ -93,22 +86,14 @@
   <script>
 
     if('{{account}}' == 'unauthenticated'){
-      console.log("{{account}}");
-      // var tag = document.createElement("a");
-      // tag.appendChild(text);
       fstr = `<form id="form" class="form-inline mx-2 my-2 my-lg-0">
               <a href="/register" class="btn btn-outline-success mx-3 my-2 my-sm-0" type="submit">Sign Up</a>
               <a href="/login" class="btn btn-outline-success my-2 my-sm-0" type="submit">Sign In</a>
             </form>
             `;
-      // document.querySelector('navbar_').innerHTML.add = str;
       document.getElementById("nav").innerHTML += fstr;
     }
     else if("{{account}}" == 'authenticated'){
-    //   str = `<form class="form-inline mx-2 my-2 my-lg-0">
-    //           <a href="" class="btn btn-outline-success my-2 my-sm-0" type="submit">Hello {{user}}</a>
-    //         </form>
-    //         `;
       fstr = `<form id="form" class="form-inline mx-2 my-2 my-lg-0">
               
               <div class="btn-group">
@@ -117,9 +102,7 @@
                     <span class="sr-only">Toggle Dropdown</span>
                   </button>
                   <div class="dropdown-menu">
-                    <a class="dropdown-item" href="#">Action</a>
-                    <a class="dropdown-item" href="#">Another action</a>
-                    <a class="dropdown-item" href="#">Something else here</a>
+                    <a class="dropdown-item" href="/your_orders">My Orders</a>
                     <div class="dropdown-divider"></div>
                     <a class="dropdown-item" href="/logout">Log out</a>
                   </div>
@@ -127,11 +110,7 @@
               </form>
             `;
       document.getElementById("nav").innerHTML += fstr;
-      // console.log("{{account}}")
     }
-    // else{
-    //   console.log("kio");
-    // }
   </script>
   {% block jss %}{% endblock jss %}
 

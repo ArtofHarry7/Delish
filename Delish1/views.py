@@ -1,18 +1,13 @@
 from dataclasses import field
+from traceback import print_tb
 from typing import OrderedDict
 from django.shortcuts import render, HttpResponse, redirect
 from datetime import datetime
-from Delish1.models import MENU
+from Delish1.models import MENU, ORDER, ORDER_MENU
 from Delish1.forms import CreateUserForm
 from django.contrib import messages
-import mysql.connector
-from operator import itemgetter
 from django.contrib.auth import authenticate, login, logout
-from django.contrib.auth.forms import UserCreationForm
-# Create your views here.
-
-# account = 'notSigned'
-# user = 'None'
+import json
 
 def registerPage(request):
     form = CreateUserForm()
@@ -37,7 +32,6 @@ def loginPage(request):
             return redirect('home')
         else:
             messages.info(request, 'Username or Password is incorrect')
-            # return render(request, 'login.html')
     return render(request, 'login.html')
 
 def logoutUser(request):
@@ -61,15 +55,6 @@ def about(request):
         user = request.user.username
     params = {'account' : account, 'user' : user}
     return render(request, 'about.html', params)
-
-# def menu(request):
-#     user = None
-#     account = 'unauthenticated'
-#     if request.user.is_authenticated:
-#         account = 'authenticated'
-#         user = request.user.username
-#     params = {'account' : account, 'user' : user}
-#     return render(request, 'menu.html', params)
 
 def special(request):
     user = None
@@ -101,15 +86,6 @@ def review(request):
     return render(request, 'review.html', params)
 
 def contactus(request):
-    # if request.method == "POST":
-    #     phone = request.POST.get('phone')
-    #     age = request.POST.get('age')
-    #     name = request.POST.get('name')
-    #     email = request.POST.get('email')
-    #     query = request.POST.get('query')
-    #     Quer = contactus(phone = phone, age = age, cust_name = name, email = email, query = query, date = datetime.today())
-    #     Quer.save()
-    #     messages.success(request, 'We have successfuly got your message')
     user = None
     account = 'unauthenticated'
     if request.user.is_authenticated:
@@ -127,29 +103,54 @@ def checkout(request):
     else:
         return redirect('login')
     params = {'account' : account, 'user' : user}
+    if user != None:
+        user = request.user
     if request.method == "POST":
-        cust = customer.objects.get(id=id)
-        cust_name = request.POST.get('name')
+        name = request.POST.get('name')
+        mode = request.POST.get('mode')
         phone = request.POST.get('phone')
-        email = cust.email
-        address = request.POST.get('address')
+        address1 = request.POST.get('address1')
+        address2 = request.POST.get('address2')
         city = request.POST.get('city')
         state = request.POST.get('state')
-        zip_code = request.POST.get('zip_code')
-        order_str = request.POST.get('itemsJason')
-        bookin = orders(order_str = order_str, cust_name = cust_name, phone = phone, email = email, address = address, city = city, state = state, zip_code = zip_code)
-        bookin.save()
+        zip_code = request.POST.get('zip')
         items = request.POST.get('itemsJason')
-        print('__________________________________________________________________________')
-        # items = dict(items)
-        ord = items[1:-1].split(", ")
-        print(ord)
-        print(ord[0])
-
-        
-        thank = True
-        id = bookin.order_id
-        # messages.success(request, 'We have successfuly got your order, We are just coming')
-        return render(request, 'checkout.html', {'thank' : thank, 'id' : id})
-
+        items = json.loads(items)
+        price = json.loads(request.POST.get('priceJason'))
+        order = ORDER.objects.create(
+            user_name=name, 
+            user=user, 
+            payment_mode=mode, 
+            price=price,
+            phone=phone, 
+            address1=address1, 
+            address2=address2, 
+            city=city, 
+            state=state, 
+            zip_code=zip_code
+        )
+        for key, value in items.items():
+            menu_item = MENU.objects.get(name = value[1])
+            order_menu = ORDER_MENU(order=order, menu_item=menu_item, quantity=value[0], name=value[1])
+            order_menu.save()
+        params['thank'] = True
+        return render(request, 'checkout.html', params)
+    params['thank'] = False
     return render(request, 'checkout.html', params)
+
+def your_orders(request):
+    user = request.user
+    objs = ORDER.objects.all().filter(user=user)
+    orders = []
+    price = 0
+    index = 0
+    for obj in objs:
+        order = ORDER_MENU.objects.all().filter(order=obj)
+        price = 0
+        for m in order:
+            price += m.quantity * m.menu_item.price
+        index += 1
+        orders.append({'order' : order, 'date' : obj.date, 'price' : price, 'index' : index})
+    orders.reverse()
+    params = {'orders' : orders, 'account' : 'authenticated', 'user' : user}
+    return render(request, 'your_orders.html', params)

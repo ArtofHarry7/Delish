@@ -1,11 +1,10 @@
-/* @import url('https://fonts.googleapis.com/css2?family=Nunito:wght@200;300;400;600;700&display=swap'); */
-/* 
+@import url('https://fonts.googleapis.com/css2?family=Nunito:wght@200;300;400;600;700&display=swap');
+
 :root{
-  --red:#ff3838;
+  --red: red;
 }
 
-*{ 
-  
+*{
   font-family: 'Nunito', sans-serif;
   margin:0; padding:0;
   box-sizing: border-box;
@@ -17,22 +16,23 @@
 
 *::selection{
   background:var(--red);
-  color:#fff;
+  color: gray;
 }
 
 html{
-  font-size: 62.5%;
+  font-size: 70%;
   overflow-x: hidden;
   scroll-behavior: smooth;
   scroll-padding-top: 6rem;
 }
 
 body{
-  background:#f7f7f7;
+  background: #F5E5FC;
+  padding-top: 4rem;
 }
 
 section{
-  padding:2rem 9%;
+  padding:1rem 12%;
 }
 
 .heading{
@@ -46,7 +46,7 @@ section{
   color:var(--red);
 }
 
-.btn{
+.btn__{
   display: inline-block;
   padding:.8rem 3rem;
   border:.2rem solid var(--red);
@@ -60,7 +60,7 @@ section{
   margin-top: 1rem;
 }
 
-.btn::before{
+.btn__::before{
   content: '';
   position: absolute;
   top:0; right: 0;
@@ -71,12 +71,12 @@ section{
   z-index: -1;
 }
 
-.btn:hover::before{
+.btn__:hover::before{
   width:100%;
   left: 0;
 }
 
-.btn:hover{
+.btn__:hover{
   color:#fff;
 }
 
@@ -84,33 +84,8 @@ header{
   position: fixed;
   top:0; left: 0; right:0;
   z-index: 1000;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  background:#fff;
-  padding:2rem 9%;
+  background: gray;
   box-shadow: 0 .5rem 1rem rgba(0,0,0,.1);
-}
-
-header .logo{
-  font-size: 2.5rem;
-  font-weight: bolder;
-  color:#666;
-}
-
-header .logo i{
-  padding-right: .5rem;
-  color:var(--red);
-}
-
-header .navbar a{
-  font-size: 2rem;
-  margin-left: 2rem;
-  color:#666;
-}
-
-header .navbar a:hover{
-  color:var(--red);
 }
 
 #menu-bar{
@@ -127,11 +102,9 @@ header .navbar a:hover{
   display: flex;
   flex-wrap: wrap;
   gap:1.5rem;
-  min-height: 100vh;
+  min-height: 10vh;
   align-items: center;
-  background:url(../images/home-bg.jpg) no-repeat;
   background-size: cover;
-  background-position: center;
 }
 
 .home .content{
@@ -145,7 +118,7 @@ header .navbar a:hover{
 
 .home .image img{
   width:100%;
-  padding:1rem;
+  padding:6rem;
   animation:float 3s linear infinite;
 }
 
@@ -225,22 +198,22 @@ header .navbar a:hover{
 .popular .box-container{
   display: flex;
   flex-wrap: wrap;
-  gap:1.5rem;
+  gap:1rem;
 }
 
 .popular .box-container .box{
   padding:2rem;
-  background:#fff;
-  box-shadow: 0 .5rem 1rem rgba(0,0,0,.1);
+  background: white;
+  box-shadow: 0.5rem 0.5rem 0.5rem rgba(0,0,0,.1);
   border:.1rem solid rgba(0,0,0,.3);
   border-radius: .5rem;
   text-align: center;
-  flex:1 1 30rem;
+  flex:1 1 25rem;
   position: relative;
 }
 
 .popular .box-container .box img{
-  height:25rem;
+  height:20rem;
   object-fit: cover;
   width:100%;
   border-radius: .5rem;
@@ -262,10 +235,16 @@ header .navbar a:hover{
   padding-top: 1rem;
 }
 
+.stars{
+  box-shadow: #333;
+  background-color: rebeccapurple;
+}
+
 .popular .box-container .box .stars i{
   color:gold;
   font-size: 1.7rem;
   padding:1rem .1rem;
+  background-color: red;
 }
 
 .steps{
@@ -498,29 +477,22 @@ header .navbar a:hover{
   top:-120%;
 }
 
-*/
-
-
-
-
-
-
-
-
-
-
-
+#login__{
+    align-self: center;
+    position: absolute;
+    top: 15%;
+    left: 28%;
+    width:40%;
+    padding:6rem;
+    padding-right:5rem 12%;
+}
 
 /* media queries  */
-/*
-@media(max-width:991px){
+
+@media(max-width:400px){
 
   html{
-    font-size: 55%;
-  }
-
-  header{
-    padding:2rem;
+    font-size: 70%;
   }
 
   section{
@@ -528,44 +500,3 @@ header .navbar a:hover{
   }
 
 }
-
-@media(max-width:768px){
-
-  #menu-bar{
-    display: initial;
-  }
-
-  header .navbar{
-    position: absolute;
-    top:100%; left: 0; right:0;
-    background: #f7f7f7;
-    border-top: .1rem solid rgba(0,0,0,.1);
-    clip-path: polygon(0 0, 100% 0, 100% 0, 0 0);
-  }
-
-  header .navbar.active{
-    clip-path: polygon(0 0, 100% 0, 100% 100%, 0% 100%);
-  }
-
-  header .navbar a{
-    margin: 1.5rem;
-    padding:1.5rem;
-    display: block;
-    border:.2rem solid rgba(0,0,0,.1);
-    border-left:.5rem solid var(--red);
-    background:#fff;
-  }
-
-}
-
-@media(max-width:450px){
-
-  html{
-    font-size: 50%;
-  }
-
-  .order .row form .inputBox input{
-    width:100%;
-  }
-
-} */

@@ -1,0 +1,29 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Order{% endblock title %}
+
+{% block body %}
+
+<section class="popular" id="popular">
+    {% for order in orders %}
+        <div class="order my-5">
+            <h1>Order {{order.index}} on {{order.date}}</h1>
+            <div class="box-container" id="items">
+                {% for i in order.order %}
+                    <div class="box">
+                        <span class="price"> Rs.{{i.menu_item.price}} </span>
+                        <img src='/media/{{i.menu_item.image}}' alt="">
+                        <h3 id="namem{{i.menu_item.id}}">{{i.menu_item.name}}</h3>
+                        <span id="divm{{i.menu_item.id}}" class="divm">
+                            <button id="m{{i.menu_item.id}}" class="btn btn-primary">Quantity : {{i.quantity}}</button>
+                        </span>
+                    </div>
+                {% endfor %}
+            </div>
+            <h2>Total price: {{order.price}}</h2>
+        </div>
+    {% endfor %}
+</section>
+
+{% endblock body %}
